@@ -22,5 +22,8 @@ namespace SmartLocker.WebAPI.Domain
         public int MaxUsages { get; set; }
         public int Usages { get; set; }
         public Guid ToolId { get; set; }
+
+        // 
+        public Tool Tool { get; set; }
     }
 }
