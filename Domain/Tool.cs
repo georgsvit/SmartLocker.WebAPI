@@ -30,6 +30,8 @@ namespace SmartLocker.WebAPI.Domain
         public Guid ServiceBookId { get; set; }
 
         //
+        public Locker Locker { get; set; }
+        public User User { get; set; }
         public ServiceBook ServiceBook { get; set; }
     }
 }
