@@ -27,6 +27,11 @@ namespace SmartLocker.WebAPI.Data
             modelBuilder.Entity<ServiceRegisterNote>().ToTable("ServiceRegister");
             modelBuilder.Entity<ViolationRegisterNote>().ToTable("ViolationRegister");
             modelBuilder.Entity<QueueRegisterNote>().ToTable("QueueRegister");
+
+            modelBuilder.Entity<Tool>()
+                .HasOne(t => t.ServiceBook)
+                .WithOne(sb => sb.Tool)
+                .HasForeignKey<ServiceBook>(sb => sb.ToolId);
         }
     }
 }
