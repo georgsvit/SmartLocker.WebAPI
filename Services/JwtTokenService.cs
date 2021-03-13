@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using SmartLocker.WebAPI.DTOs.Internal;
+using SmartLocker.WebAPI.Contracts.DTOs.Internal;
 using SmartLocker.WebAPI.Options;
 using System;
 using System.Collections.Generic;

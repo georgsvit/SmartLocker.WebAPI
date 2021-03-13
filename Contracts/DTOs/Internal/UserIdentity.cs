@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SmartLocker.WebAPI.DTOs.Internal
+namespace SmartLocker.WebAPI.Contracts.DTOs.Internal
 {
     public record UserIdentity
     {
