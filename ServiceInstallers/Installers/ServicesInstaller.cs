@@ -12,6 +12,8 @@ namespace SmartLocker.WebAPI.ServiceInstallers.Installers
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
+            services.AddTransient<AccountService>();
+
             services.AddTransient<JwtTokenService>();
         }
     }
