@@ -9,7 +9,7 @@ namespace SmartLocker.WebAPI.Contracts
     {
         public static class Account
         {
-            public const string Base = "";
+            public const string Base = "account";
 
             public const string Login = Base + "/login";
             public const string Register = Base + "/register";
