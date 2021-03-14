@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using SmartLocker.WebAPI.Services;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace SmartLocker.WebAPI.ServiceInstallers.Installers
             services.AddTransient<AccountService>();
 
             services.AddTransient<JwtTokenService>();
+            services.AddTransient<IStringLocalizer, LocalizationService>();
         }
     }
 }
