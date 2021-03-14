@@ -9,6 +9,7 @@ namespace SmartLocker.WebAPI.ServiceInstallers.Installers
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
+            services.Configure<CultureOptions>(configuration.GetSection(CultureOptions.SectionName));
         }
     }
 }
