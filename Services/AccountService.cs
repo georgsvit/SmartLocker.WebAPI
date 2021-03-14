@@ -8,6 +8,7 @@ using SmartLocker.WebAPI.Contracts.DTOs.External.Requests;
 using System.IdentityModel.Tokens.Jwt;
 using SmartLocker.WebAPI.Contracts.DTOs.Internal;
 using SmartLocker.WebAPI.Contracts.DTOs.External.Responses;
+using Microsoft.Extensions.Localization;
 
 namespace SmartLocker.WebAPI.Services
 {
@@ -16,18 +17,20 @@ namespace SmartLocker.WebAPI.Services
         protected readonly ApplicationContext applicationContext;
         protected readonly JwtTokenService tokenService;
         protected readonly IDataProtector dataProtector;
+        protected readonly IStringLocalizer localizer;
 
-        public AccountService(ApplicationContext applicationContext, JwtTokenService tokenService, IDataProtectionProvider provider)
+        public AccountService(ApplicationContext applicationContext, JwtTokenService tokenService, IDataProtectionProvider provider, IStringLocalizer localizer)
         {
             this.applicationContext = applicationContext;
             this.tokenService = tokenService;
             this.dataProtector = provider.CreateProtector("AccountService");
+            this.localizer = localizer;
         }
 
         public async Task RegisterAsync(User user)
         {
             if (await IsUserRegisteredAsync(user))
-                throw new Exception("The user with such login is already registered.");
+                throw new Exception(localizer["The user with such login is already registered."]);
 
             ProtectPassword(user);
 
@@ -40,7 +43,7 @@ namespace SmartLocker.WebAPI.Services
             var user = await GetUserAsync(loginRequest);
 
             if (user is null)
-                throw new Exception("Login failed.");
+                throw new Exception(localizer["Login failed."]);
 
             JwtSecurityToken token = tokenService.CreateJwtSecurityToken(new UserIdentity(user.Id, user.Login, user.Password, user.Role));
             string encodedToken = tokenService.EncodeJwtSecurityToken(token);
@@ -65,12 +68,12 @@ namespace SmartLocker.WebAPI.Services
             var user = await GetUserByLoginAsync(loginRequest.Login);
 
             if (user is null) 
-                throw new Exception("The user with such login doesn`t exist.");
+                throw new Exception(localizer["The user with such login doesn`t exist."]);
 
             var invalidPassword = dataProtector.Unprotect(user.Password) != loginRequest.Password;
 
             if (invalidPassword) 
-                throw new Exception("The password isn`t correct.");
+                throw new Exception(localizer["The password isn`t correct."]);
 
             return user;
         }
