@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartLocker.WebAPI.Contracts;
 using SmartLocker.WebAPI.Contracts.DTOs.External.Requests;
 using SmartLocker.WebAPI.Contracts.DTOs.External.Responses;
@@ -35,6 +37,7 @@ namespace SmartLocker.WebAPI.Controllers
         }
 
         [HttpPost(ApiRoutes.Account.Register)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Roles.ADMIN)]
         public async Task<IActionResult> Register([FromBody]RegistrationRequest registrationRequest)
         {
             string role = Roles.EMPLOYEE;
