@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using SmartLocker.WebAPI.Contracts.DTOs.Internal;
 using SmartLocker.WebAPI.Contracts.DTOs.External.Responses;
 using Microsoft.Extensions.Localization;
+using SmartLocker.WebAPI.Domain.Constants;
 
 namespace SmartLocker.WebAPI.Services
 {
@@ -23,7 +24,7 @@ namespace SmartLocker.WebAPI.Services
         {
             this.applicationContext = applicationContext;
             this.tokenService = tokenService;
-            this.dataProtector = provider.CreateProtector("AccountService");
+            this.dataProtector = provider.CreateProtector(DataProtectionPurposes.UserService);
             this.localizer = localizer;
         }
 
@@ -32,7 +33,7 @@ namespace SmartLocker.WebAPI.Services
             if (await IsUserRegisteredAsync(user))
                 throw new Exception(localizer["The user with such login is already registered."]);
 
-            ProtectPassword(user);
+            ProtectUserData(user);
 
             await applicationContext.Users.AddAsync(user);
             await applicationContext.SaveChangesAsync();
@@ -45,14 +46,26 @@ namespace SmartLocker.WebAPI.Services
             if (user is null)
                 throw new Exception(localizer["Login failed."]);
 
+            UnprotectUserData(user);
+
             JwtSecurityToken token = tokenService.CreateJwtSecurityToken(new UserIdentity(user.Id, user.Login, user.Password, user.Role));
             string encodedToken = tokenService.EncodeJwtSecurityToken(token);
 
             return new DetailedLoginResponse(user.Id, user.FirstName, user.LastName, user.Role, encodedToken, token.ValidTo);
         }
 
-        private void ProtectPassword(User user) =>
+        private void ProtectUserData(User user)
+        {
             user.Password = dataProtector.Protect(user.Password);
+            user.FirstName = dataProtector.Protect(user.FirstName);
+            user.LastName = dataProtector.Protect(user.LastName);
+        }
+
+        private void UnprotectUserData(User user)
+        {
+            user.FirstName = dataProtector.Unprotect(user.FirstName);
+            user.LastName = dataProtector.Unprotect(user.LastName);
+        }
 
         private async Task<bool> IsUserRegisteredAsync(User user)
         {
