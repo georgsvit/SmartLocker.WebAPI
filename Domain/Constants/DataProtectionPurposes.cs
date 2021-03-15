@@ -3,5 +3,6 @@
     public static class DataProtectionPurposes
     {
         public const string UserService = "UserService";
+        public const string DataService = "DataService";
     }
 }
