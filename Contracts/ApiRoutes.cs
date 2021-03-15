@@ -18,5 +18,13 @@
             public const string GetOne = Base + "/{Id}";
             public const string Edit = Base + "/{Id}";
         }
+
+        public static class Data
+        {
+            public const string Base = "data";
+
+            public const string Export = Base;
+            public const string Import = Base;
+        }
     }
 }
