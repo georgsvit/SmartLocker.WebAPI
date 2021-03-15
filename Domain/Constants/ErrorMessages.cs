@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SmartLocker.WebAPI.Domain.Constants
 {
@@ -16,6 +13,9 @@ namespace SmartLocker.WebAPI.Domain.Constants
             messages.Add("The user with such login doesn`t exist.", "Користувач з таким логіном не існує.");
             messages.Add("The password isn`t correct.", "Невірний пароль.");
 
+            messages.Add("Role doesn`t exist.", "Роль не існує.");
+            messages.Add("User with this identifier doesn`t exist.", "Користувач з таким ідентифікатором не існує.");
+
             return messages;
         }
 
@@ -27,6 +27,9 @@ namespace SmartLocker.WebAPI.Domain.Constants
             messages.Add("Login failed.", "Login failed.");
             messages.Add("The user with such login doesn`t exist.", "The user with such login doesn`t exist.");
             messages.Add("The password isn`t correct.", "The password isn`t correct.");
+
+            messages.Add("Role doesn`t exist.", "Role doesn`t exist.");
+            messages.Add("User with this identifier doesn`t exist.", "User with this identifier doesn`t exist.");
 
             return messages;
         }
