@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SmartLocker.WebAPI.Contracts
+﻿namespace SmartLocker.WebAPI.Contracts
 {
     public static class ApiRoutes
     {
@@ -15,5 +10,13 @@ namespace SmartLocker.WebAPI.Contracts
             public const string Register = Base + "/register";
         }
 
+        public static class User
+        {
+            public const string Base = "user";
+
+            public const string GetAll = Base;
+            public const string GetOne = Base + "/{Id}";
+            public const string Edit = Base + "/{Id}";
+        }
     }
 }
