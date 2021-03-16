@@ -1,4 +1,5 @@
-﻿using SmartLocker.WebAPI.Domain.Constants;
+﻿using SmartLocker.WebAPI.Contracts.DTOs.External.Responses;
+using SmartLocker.WebAPI.Domain.Constants;
 using System;
 using System.Collections.Generic;
 
@@ -30,5 +31,8 @@ namespace SmartLocker.WebAPI.Domain
 
         //
         public List<Tool> Tools { get; set; }
+
+        public UserDataResponse GetUserDataResponse() =>
+            new (Id, FirstName, LastName, Role, AccessLevel, Login, Tools);
     }
 }
