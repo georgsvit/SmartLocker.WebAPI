@@ -42,7 +42,7 @@ namespace SmartLocker.WebAPI.Controllers
             try
             {
                 User user = await userService.GetOneAsync(id);
-                return Ok(user);
+                return Ok(user.GetUserDataResponse());
             }
             catch (Exception e)
             {
@@ -56,7 +56,7 @@ namespace SmartLocker.WebAPI.Controllers
             try
             {
                 User user = await userService.EditAsync(id, request);
-                return Ok(user);
+                return Ok(user.GetUserDataResponse());
             }
             catch (Exception e)
             {

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using SmartLocker.WebAPI.Contracts.DTOs.External.Requests;
+using SmartLocker.WebAPI.Contracts.DTOs.External.Responses;
 using SmartLocker.WebAPI.Data;
 using SmartLocker.WebAPI.Domain;
 using SmartLocker.WebAPI.Domain.Constants;
@@ -25,7 +26,7 @@ namespace SmartLocker.WebAPI.Services
             this.localizer = localizer;
         }
 
-        public async Task<List<User>> GetAllAsync(string role)
+        public async Task<List<UserDataResponse>> GetAllAsync(string role)
         {
             if (role is not null && !Roles.IsRoleValid(role))
                 throw new Exception(localizer["Role doesn`t exist."]);
@@ -36,7 +37,7 @@ namespace SmartLocker.WebAPI.Services
 
             users.ForEach(user => UnprotectUserData(user));
 
-            return users;
+            return users.Select(u => u.GetUserDataResponse()).ToList();
         }
 
         public async Task<User> GetOneAsync(Guid id)
