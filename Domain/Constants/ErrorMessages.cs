@@ -15,6 +15,8 @@ namespace SmartLocker.WebAPI.Domain.Constants
 
             messages.Add("Role doesn`t exist.", "Роль не існує.");
             messages.Add("User with this identifier doesn`t exist.", "Користувач з таким ідентифікатором не існує.");
+            messages.Add("Locker already exists.", "Така шафа вже існує.");
+            messages.Add("Locker with this identifier doesn`t exist.", "Шафа з таким ідентифікатором не існує.");
 
             return messages;
         }
@@ -30,6 +32,8 @@ namespace SmartLocker.WebAPI.Domain.Constants
 
             messages.Add("Role doesn`t exist.", "Role doesn`t exist.");
             messages.Add("User with this identifier doesn`t exist.", "User with this identifier doesn`t exist.");
+            messages.Add("Locker already exists.", "Locker already exists.");
+            messages.Add("Locker with this identifier doesn`t exist.", "Locker with this identifier doesn`t exist.");
 
             return messages;
         }
