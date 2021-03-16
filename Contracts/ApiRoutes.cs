@@ -27,5 +27,18 @@
             public const string Import = Base;
             public const string Backup = Base + "/backup";
         }
+
+        public static class Locker
+        {
+            public const string Base = "locker";
+
+            public const string GetAll = Base;
+            public const string GetOne = Base + "/{Id}";
+            public const string Edit = Base + "/{Id}";
+            public const string Create = Base;
+            public const string Delete = Base + "/{Id}";
+            public const string Block = Base + "/block/{Id}";
+            public const string Unblock = Base + "/unblock/{Id}";
+        }
     }
 }
