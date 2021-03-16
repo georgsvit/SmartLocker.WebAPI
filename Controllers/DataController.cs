@@ -51,6 +51,20 @@ namespace SmartLocker.WebAPI.Controllers
             }
         }
 
+        [HttpGet(ApiRoutes.Data.Backup)]
+        public async Task<IActionResult> CreateBackupDb()
+        {
+            try
+            {
+                byte[] fileContent = await dataService.CreateBackupAsync();
+                return File(fileContent, "application/octet-stream");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        
         private async Task<byte[]> ReadFileContentBytes(IFormFile importDataRequest)
         {
             byte[] fileContentBytes;
