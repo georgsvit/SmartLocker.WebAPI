@@ -25,6 +25,7 @@
 
             public const string Export = Base;
             public const string Import = Base;
+            public const string Backup = Base + "/backup";
         }
     }
 }
