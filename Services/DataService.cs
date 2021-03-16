@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using SmartLocker.WebAPI.Contracts.DTOs.Internal;
 using SmartLocker.WebAPI.Data;
 using SmartLocker.WebAPI.Domain.Constants;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -16,11 +15,13 @@ namespace SmartLocker.WebAPI.Services
     {
         private readonly ApplicationContext applicationContext;
         private readonly IDataProtector protector;
+        private readonly IWebHostEnvironment environment;
 
-        public DataService(ApplicationContext applicationContext, IDataProtectionProvider provider)
+        public DataService(ApplicationContext applicationContext, IDataProtectionProvider provider, IWebHostEnvironment environment)
         {
             this.applicationContext = applicationContext;
             protector = provider.CreateProtector(DataProtectionPurposes.DataService);
+            this.environment = environment;
         }
 
         public async Task<byte[]> ExportAsync()
@@ -41,6 +42,21 @@ namespace SmartLocker.WebAPI.Services
             await LoadDataToDbAsync(data);
         }
 
+        public async Task<byte[]> CreateBackupAsync()
+        {
+            string backupName = $"{applicationContext.Database.GetDbConnection().Database} {DateTime.Now:ddMMyyyy_HHmmss}.bak";
+            string path = $"{environment.WebRootPath}\\Backups\\{backupName}";
+            string sqlCommand = "BACKUP DATABASE SmartLockerDev" +
+                $" TO DISK = '{path}'" +
+                " WITH FORMAT," +
+                " MEDIANAME = 'SQLServerBackups'," +
+                " NAME = 'Full Backup of SQLTestDB'";
+            
+            await applicationContext.Database.ExecuteSqlRawAsync(sqlCommand);
+
+            return await System.IO.File.ReadAllBytesAsync(path);
+        }
+        
         private async Task LoadDataToDbAsync(DbData data)
         {
             await applicationContext.Users.AddRangeAsync(data.Users);
