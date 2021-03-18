@@ -15,16 +15,12 @@ namespace SmartLocker.WebAPI.Services
     public class ToolService
     {
         private readonly ApplicationContext applicationContext;
-        private readonly ServiceBookService bookService;
         private readonly IStringLocalizer localizer;
-        private readonly IDataProtector dataProtector;
 
-        public ToolService(ApplicationContext applicationContext, ServiceBookService bookService, IStringLocalizer localizer, IDataProtectionProvider provider)
+        public ToolService(ApplicationContext applicationContext, IStringLocalizer localizer)
         {
             this.applicationContext = applicationContext;
-            this.bookService = bookService;
             this.localizer = localizer;
-            dataProtector = provider.CreateProtector(DataProtectionPurposes.ToolService);
         }
 
         public async Task<List<Tool>> GetAllAsync() =>
