@@ -44,7 +44,7 @@ namespace SmartLocker.WebAPI.Services
 
         public async Task<ServiceBook> EditAsync(Guid id, ServiceBookEditRequest request)
         {
-            ServiceBook newBook = new(id, request.LastServiceDate, new TimeSpan(0, 0, request.MsBetweenServices), request.MaxUsages, request.Usages);
+            ServiceBook newBook = new(id, request.LastServiceDate, request.MsBetweenServices, request.MaxUsages, request.Usages);
             ServiceBook book = await GetOneAsync(id);
 
             book = newBook;
