@@ -40,5 +40,14 @@
             public const string Block = Base + "/block/{Id}";
             public const string Unblock = Base + "/unblock/{Id}";
         }
+
+        public static class ServiceBook
+        {
+            public const string Base = "servicebook";
+
+            public const string GetAll = Base;
+            public const string GetOne = Base + "/{Id}";
+            public const string Edit = Base + "/{Id}";
+        }
     }
 }
