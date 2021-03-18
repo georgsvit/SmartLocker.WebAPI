@@ -49,5 +49,16 @@
             public const string GetOne = Base + "/{Id}";
             public const string Edit = Base + "/{Id}";
         }
+
+        public static class Tool
+        {
+            public const string Base = "tool";
+
+            public const string GetAll = Base;
+            public const string GetOne = Base + "/{Id}";
+            public const string Edit = Base + "/{Id}";
+            public const string Create = Base;
+            public const string Delete = Base + "/{Id}";
+        }
     }
 }
