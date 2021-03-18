@@ -64,7 +64,7 @@ namespace SmartLocker.WebAPI.Controllers
                 return BadRequest(e.Message);
             }
         }
-        
+
         private async Task<byte[]> ReadFileContentBytes(IFormFile importDataRequest)
         {
             byte[] fileContentBytes;

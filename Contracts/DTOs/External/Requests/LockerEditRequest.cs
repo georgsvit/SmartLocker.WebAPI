@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SmartLocker.WebAPI.Contracts.DTOs.External.Requests
+﻿namespace SmartLocker.WebAPI.Contracts.DTOs.External.Requests
 {
     public record LockerEditRequest(
         bool IsFull,

@@ -43,7 +43,7 @@ namespace SmartLocker.WebAPI.Services
         {
             Locker locker = new(request.Login, request.Password);
 
-            if (await IsLockerInDbAsync(locker)) 
+            if (await IsLockerInDbAsync(locker))
                 throw new Exception(localizer["Locker already exists."]);
 
             await applicationContext.Lockers.AddAsync(locker);
@@ -60,13 +60,14 @@ namespace SmartLocker.WebAPI.Services
 
         public async Task<Locker> EditAsync(Guid id, LockerEditRequest request)
         {
-            Locker newLocker = new (request.Login, request.Password, request.IsFull, request.IsBlocked);
+            Locker newLocker = new(request.Login, request.Password, request.IsFull, request.IsBlocked);
             Locker locker = await GetOneAsync(id);
 
             if (request.Password != "")
             {
                 ProtectPassword(newLocker);
-            } else
+            }
+            else
             {
                 newLocker.Password = locker.Password;
             }

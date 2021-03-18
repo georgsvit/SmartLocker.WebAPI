@@ -15,7 +15,7 @@ namespace SmartLocker.WebAPI.ServiceInstallers.Installers
             string connectionString = configuration.GetConnectionString("ReleaseConnection");
 #endif
 
-            services.AddDbContext<ApplicationContext>(options => 
+            services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(connectionString)
             );
         }

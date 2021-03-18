@@ -7,7 +7,7 @@ namespace SmartLocker.WebAPI.Domain
     public class Tool
     {
         private Tool() { }
-        
+
         public Tool(ToolCreateRequest request)
         {
             Id = Guid.NewGuid();

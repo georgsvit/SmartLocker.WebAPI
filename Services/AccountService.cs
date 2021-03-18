@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using SmartLocker.WebAPI.Contracts.DTOs.External.Requests;
+using SmartLocker.WebAPI.Contracts.DTOs.External.Responses;
+using SmartLocker.WebAPI.Contracts.DTOs.Internal;
 using SmartLocker.WebAPI.Data;
 using SmartLocker.WebAPI.Domain;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading.Tasks;
-using SmartLocker.WebAPI.Contracts.DTOs.External.Requests;
-using System.IdentityModel.Tokens.Jwt;
-using SmartLocker.WebAPI.Contracts.DTOs.Internal;
-using SmartLocker.WebAPI.Contracts.DTOs.External.Responses;
-using Microsoft.Extensions.Localization;
 using SmartLocker.WebAPI.Domain.Constants;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
 
 namespace SmartLocker.WebAPI.Services
 {
@@ -39,7 +39,7 @@ namespace SmartLocker.WebAPI.Services
             await applicationContext.SaveChangesAsync();
         }
 
-        public async Task<DetailedLoginResponse> LoginAsync(LoginRequest loginRequest) 
+        public async Task<DetailedLoginResponse> LoginAsync(LoginRequest loginRequest)
         {
             var user = await GetUserAsync(loginRequest);
 
@@ -80,12 +80,12 @@ namespace SmartLocker.WebAPI.Services
         {
             var user = await GetUserByLoginAsync(loginRequest.Login);
 
-            if (user is null) 
+            if (user is null)
                 throw new Exception(localizer["The user with such login doesn`t exist."]);
 
             var invalidPassword = dataProtector.Unprotect(user.Password) != loginRequest.Password;
 
-            if (invalidPassword) 
+            if (invalidPassword)
                 throw new Exception(localizer["The password isn`t correct."]);
 
             return user;

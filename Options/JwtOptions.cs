@@ -12,7 +12,7 @@ namespace SmartLocker.WebAPI.Options
         public int LifeTime { get; set; }
         public string Key { get; set; }
 
-        public SymmetricSecurityKey GetSymmetricSecurityKey() => 
-            new (Encoding.ASCII.GetBytes(Key));
+        public SymmetricSecurityKey GetSymmetricSecurityKey() =>
+            new(Encoding.ASCII.GetBytes(Key));
     }
 }

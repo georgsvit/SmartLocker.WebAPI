@@ -37,7 +37,7 @@ namespace SmartLocker.WebAPI.Services
         {
             if (await GetOneAsync(book.Id) is not null)
                 throw new Exception(localizer["Service book already exists."]);
-            
+
             await applicationContext.ServiceBooks.AddAsync(book);
             await applicationContext.SaveChangesAsync();
         }

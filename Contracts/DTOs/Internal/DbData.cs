@@ -12,6 +12,6 @@ namespace SmartLocker.WebAPI.Contracts.DTOs.Internal
         List<AccountingRegisterNote> AccountingNotes,
         List<QueueRegisterNote> QueueNotes,
         List<ServiceRegisterNote> ServiceNotes,
-        List<ViolationRegisterNote> ViolationNotes      
+        List<ViolationRegisterNote> ViolationNotes
         );
 }

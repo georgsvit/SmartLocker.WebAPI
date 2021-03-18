@@ -38,7 +38,7 @@ namespace SmartLocker.WebAPI.Controllers
 
         [HttpPost(ApiRoutes.Account.Register)]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = Roles.ADMIN)]
-        public async Task<IActionResult> Register([FromBody]RegistrationRequest registrationRequest)
+        public async Task<IActionResult> Register([FromBody] RegistrationRequest registrationRequest)
         {
             string role = Roles.EMPLOYEE;
             try
@@ -49,8 +49,8 @@ namespace SmartLocker.WebAPI.Controllers
             catch (Exception e)
             {
                 return BadRequest(new BadRequestResponse(e.Message));
-            }            
-            
+            }
+
             User user = new(registrationRequest.FirstName, registrationRequest.LastName,
                             role, (AccessLevel)registrationRequest.AccessLevel,
                             registrationRequest.Login, registrationRequest.Password);

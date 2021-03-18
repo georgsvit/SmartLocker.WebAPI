@@ -15,7 +15,7 @@ namespace SmartLocker.WebAPI.Domain.Constants
             SERVICEMAN
         };
 
-        public static bool IsRoleValid(string role) => 
+        public static bool IsRoleValid(string role) =>
             GetAllRoles().Contains(role.ToUpper());
     }
 }

@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.DataProtection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using SmartLocker.WebAPI.Contracts.DTOs.External.Requests;
 using SmartLocker.WebAPI.Data;
 using SmartLocker.WebAPI.Domain;
-using SmartLocker.WebAPI.Domain.Constants;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SmartLocker.WebAPI.Services
@@ -39,7 +36,7 @@ namespace SmartLocker.WebAPI.Services
 
         public async Task CreateAsync(ToolCreateRequest request)
         {
-            Tool tool = new (request);
+            Tool tool = new(request);
 
             await applicationContext.Tools.AddAsync(tool);
             await applicationContext.SaveChangesAsync();
@@ -49,7 +46,7 @@ namespace SmartLocker.WebAPI.Services
         {
             Tool newTool = new(request);
             Tool tool = await GetOneAsync(id);
-           
+
             tool = newTool;
             tool.Id = id;
 

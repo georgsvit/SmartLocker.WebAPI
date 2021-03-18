@@ -51,7 +51,7 @@ namespace SmartLocker.WebAPI.Services
 
             return user;
         }
-        
+
         public async Task<User> EditAsync(Guid id, UserEditRequest request)
         {
             if (!Roles.IsRoleValid(request.Role))

@@ -29,7 +29,7 @@ namespace SmartLocker.WebAPI.Services
             DbData data = await LoadDbDataAsync();
             string jsonData = JsonSerializer.Serialize(data);
             string jsonEncoded = protector.Protect(jsonData);
-            
+
             return Encoding.UTF8.GetBytes(jsonEncoded);
         }
 
@@ -38,7 +38,7 @@ namespace SmartLocker.WebAPI.Services
             string jsonEncoded = Encoding.UTF8.GetString(importFileContent);
             string json = protector.Unprotect(jsonEncoded);
             DbData data = JsonSerializer.Deserialize<DbData>(json);
-            
+
             await LoadDataToDbAsync(data);
         }
 
@@ -51,12 +51,12 @@ namespace SmartLocker.WebAPI.Services
                 " WITH FORMAT," +
                 " MEDIANAME = 'SQLServerBackups'," +
                 " NAME = 'Full Backup of SQLTestDB'";
-            
+
             await applicationContext.Database.ExecuteSqlRawAsync(sqlCommand);
 
             return await System.IO.File.ReadAllBytesAsync(path);
         }
-        
+
         private async Task LoadDataToDbAsync(DbData data)
         {
             await applicationContext.Users.AddRangeAsync(data.Users);
@@ -72,7 +72,7 @@ namespace SmartLocker.WebAPI.Services
         }
 
         private async Task<DbData> LoadDbDataAsync() =>
-            new (
+            new(
                 await applicationContext.Users.AsNoTracking().ToListAsync(),
                 await applicationContext.Tools.AsNoTracking().ToListAsync(),
                 await applicationContext.ServiceBooks.AsNoTracking().ToListAsync(),

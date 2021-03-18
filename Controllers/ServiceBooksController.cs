@@ -27,7 +27,7 @@ namespace SmartLocker.WebAPI.Controllers
         {
             try
             {
-                var serviceBooks = await bookService.GetAllAsync();                
+                var serviceBooks = await bookService.GetAllAsync();
                 return Ok(serviceBooks);
             }
             catch (Exception e)
@@ -49,7 +49,7 @@ namespace SmartLocker.WebAPI.Controllers
                 return BadRequest(e.Message);
             }
         }
-        
+
         [HttpPatch(ApiRoutes.ServiceBook.Edit)]
         public async Task<IActionResult> Edit([FromRoute] Guid id, [FromBody] ServiceBookEditRequest request)
         {

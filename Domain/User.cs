@@ -33,6 +33,6 @@ namespace SmartLocker.WebAPI.Domain
         public List<Tool> Tools { get; set; }
 
         public UserDataResponse GetUserDataResponse() =>
-            new (Id, FirstName, LastName, Role, AccessLevel, Login, Tools);
+            new(Id, FirstName, LastName, Role, AccessLevel, Login, Tools);
     }
 }

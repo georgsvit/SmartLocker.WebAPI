@@ -36,7 +36,7 @@ namespace SmartLocker.WebAPI.Services
             new JwtSecurityTokenHandler().WriteToken(token);
 
         private IEnumerable<Claim> GetClaims(UserIdentity identity) =>
-            new List<Claim> 
+            new List<Claim>
             {
                 new (ClaimsIdentity.DefaultNameClaimType, identity.Id.ToString()),
                 new (ClaimsIdentity.DefaultRoleClaimType, identity.Role),
