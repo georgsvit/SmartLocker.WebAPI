@@ -22,6 +22,9 @@ namespace SmartLocker.WebAPI.Domain.Constants
             messages.Add("Service book with this identifier doesn`t exist.", "Сервісна книжка з таким ідентифікатором не існує.");
             messages.Add("Tool already exists.", "Інструмент вже існує.");
             messages.Add("Tool with this identifier doesn`t exist.", "Інструмент з таким ідентифікатором не існує.");
+            
+            messages.Add("Note already exists.", "Запис вже існує.");
+            messages.Add("Note with this identifier doesn`t exist.", "Запис з таким ідентифікатором не існує.");
 
             return messages;
         }
@@ -44,6 +47,9 @@ namespace SmartLocker.WebAPI.Domain.Constants
             messages.Add("Service book with this identifier doesn`t exist.", "Service book with this identifier doesn`t exist.");
             messages.Add("Tool already exists.", "Tool already exists.");
             messages.Add("Tool with this identifier doesn`t exist.", "Tool with this identifier doesn`t exist.");
+            
+            messages.Add("Note already exists.", "Note already exists.");
+            messages.Add("Note with this identifier doesn`t exist.", "Note with this identifier doesn`t exist.");
 
             return messages;
         }
