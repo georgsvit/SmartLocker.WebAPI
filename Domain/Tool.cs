@@ -1,4 +1,5 @@
-﻿using SmartLocker.WebAPI.Domain.Constants;
+﻿using SmartLocker.WebAPI.Contracts.DTOs.External.Requests;
+using SmartLocker.WebAPI.Domain.Constants;
 using System;
 
 namespace SmartLocker.WebAPI.Domain
@@ -7,16 +8,23 @@ namespace SmartLocker.WebAPI.Domain
     {
         private Tool() { }
 
-        public Tool(string name, string description, string imgUri, AccessLevel accessLevel,
-                    DateTime lastServiceDate, TimeSpan serviceInterval,
-                    int maxUsages, int usages)
+        public Tool(ToolCreateRequest request)
         {
             Id = Guid.NewGuid();
-            Name = name;
-            Description = description;
-            ImgUri = imgUri;
-            AccessLevel = accessLevel;
-            ServiceBook = new ServiceBook(Id, lastServiceDate, serviceInterval, maxUsages, usages);
+            Name = request.Name;
+            Description = request.Description;
+            ImgUri = request.ImgUrl;
+            AccessLevel = (AccessLevel)request.AccessLevel;
+            ServiceBook = new ServiceBook(Id, request.LastServiceDate, request.MsBetweenServices, request.MaxUsages, request.Usages);
+            ServiceBookId = Id;
+        }
+
+        public Tool(ToolEditRequest request)
+        {
+            Name = request.Name;
+            Description = request.Description;
+            ImgUri = request.ImgUrl;
+            AccessLevel = (AccessLevel)request.AccessLevel;
         }
 
         public Guid Id { get; set; }

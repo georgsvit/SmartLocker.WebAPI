@@ -1,4 +1,5 @@
-﻿using SmartLocker.WebAPI.Domain.Constants;
+﻿using SmartLocker.WebAPI.Contracts.DTOs.External.Responses;
+using SmartLocker.WebAPI.Domain.Constants;
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +8,17 @@ namespace SmartLocker.WebAPI.Domain
     public class User
     {
         private User() { }
+
+        public User(string firstName, string lastName, string role, AccessLevel accessLevel, string login, string password)
+        {
+            Id = Guid.NewGuid();
+            FirstName = firstName;
+            LastName = lastName;
+            Role = role;
+            AccessLevel = accessLevel;
+            Login = login;
+            Password = password;
+        }
 
         public Guid Id { get; set; }
         public string FirstName { get; set; }
@@ -19,5 +31,8 @@ namespace SmartLocker.WebAPI.Domain
 
         //
         public List<Tool> Tools { get; set; }
+
+        public UserDataResponse GetUserDataResponse() =>
+            new(Id, FirstName, LastName, Role, AccessLevel, Login, Tools);
     }
 }

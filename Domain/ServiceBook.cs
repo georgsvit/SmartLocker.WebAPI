@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace SmartLocker.WebAPI.Domain
 {
@@ -6,11 +7,11 @@ namespace SmartLocker.WebAPI.Domain
     {
         private ServiceBook() { }
 
-        public ServiceBook(Guid id, DateTime lastServiceDate, TimeSpan timeBetweenServices, int maxUsages, int usages)
+        public ServiceBook(Guid id, DateTime lastServiceDate, long msBetweenServices, int maxUsages, int usages)
         {
             Id = id;
             LastServiceDate = lastServiceDate;
-            TimeBetweenServices = timeBetweenServices;
+            MsBetweenServices = msBetweenServices;
             MaxUsages = maxUsages;
             Usages = usages;
             ToolId = Id;
@@ -18,12 +19,13 @@ namespace SmartLocker.WebAPI.Domain
 
         public Guid Id { get; set; }
         public DateTime LastServiceDate { get; set; }
-        public TimeSpan TimeBetweenServices { get; set; }
+        public long MsBetweenServices { get; set; }
         public int MaxUsages { get; set; }
         public int Usages { get; set; }
         public Guid ToolId { get; set; }
 
         // 
+        [JsonIgnore]
         public Tool Tool { get; set; }
     }
 }

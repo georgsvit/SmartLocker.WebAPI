@@ -1,4 +1,6 @@
-﻿namespace SmartLocker.WebAPI.Domain.Constants
+﻿using System.Linq;
+
+namespace SmartLocker.WebAPI.Domain.Constants
 {
     public static class Roles
     {
@@ -12,5 +14,8 @@
             EMPLOYEE,
             SERVICEMAN
         };
+
+        public static bool IsRoleValid(string role) =>
+            GetAllRoles().Contains(role.ToUpper());
     }
 }

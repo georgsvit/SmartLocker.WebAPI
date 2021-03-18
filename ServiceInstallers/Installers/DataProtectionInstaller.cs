@@ -3,11 +3,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace SmartLocker.WebAPI.ServiceInstallers.Installers
 {
-    public class ControllersInstaller : IInstaller
+    public class DataProtectionInstaller : IInstaller
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddControllers();
+            services.AddDataProtection();
         }
     }
 }

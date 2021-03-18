@@ -1,13 +1,15 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SmartLocker.WebAPI.Options;
 
 namespace SmartLocker.WebAPI.ServiceInstallers.Installers
 {
-    public class ControllersInstaller : IInstaller
+    public class OptionsInstaller : IInstaller
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddControllers();
+            services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
+            services.Configure<CultureOptions>(configuration.GetSection(CultureOptions.SectionName));
         }
     }
 }
