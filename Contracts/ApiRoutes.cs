@@ -66,11 +66,21 @@
             public const string Base = "accounting";
 
             public const string ViolationNote = Base + "/violation";
-            public const string ServiceNote = Base + "/service";
+
             public const string AccountingNote = Base;
             
             public const string BookTool = Base + "/queue";
-            public const string EnterQueue = Base + "/queue";
+            public const string EnterQueue = Base + "/queue";                      
+        }
+
+        public static class Service
+        {
+
+            public const string Base = "service";
+
+            public const string GetAvailableServiceTasks = Base + "/tasks";
+            public const string ApplyServiceNote = Base + "/apply";
+            public const string AcceptMaintenance = Base + "/accept";
         }
     }
 }
