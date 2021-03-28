@@ -44,5 +44,33 @@ namespace SmartLocker.WebAPI.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost(ApiRoutes.Accounting.ReturnTool)]
+        public async Task<IActionResult> ReturnTool([FromForm] Guid userId, [FromForm] Guid toolId, [FromForm] Guid lockerId)
+        {
+            try
+            {
+                await accountingService.ReturnTool(userId, toolId, lockerId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost(ApiRoutes.Accounting.TakeTool)]
+        public async Task<IActionResult> TakeTool([FromForm] Guid userId, [FromForm] Guid toolId)
+        {
+            try
+            {
+                await accountingService.TakeTool(userId, toolId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }
