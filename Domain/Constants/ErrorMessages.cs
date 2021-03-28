@@ -25,6 +25,8 @@ namespace SmartLocker.WebAPI.Domain.Constants
             
             messages.Add("Note already exists.", "Запис вже існує.");
             messages.Add("Note with this identifier doesn`t exist.", "Запис з таким ідентифікатором не існує.");
+            messages.Add("Tool can`t be returned.", "Інструмент не може бути повернутий.");
+            messages.Add("Tool can`t be taken.", "Інструмент не може бути отриманий.");
 
             return messages;
         }
@@ -50,6 +52,8 @@ namespace SmartLocker.WebAPI.Domain.Constants
             
             messages.Add("Note already exists.", "Note already exists.");
             messages.Add("Note with this identifier doesn`t exist.", "Note with this identifier doesn`t exist.");
+            messages.Add("Tool can`t be returned.", "Tool can`t be returned.");
+            messages.Add("Tool can`t be taken.", "Tool can`t be taken.");
 
             return messages;
         }
