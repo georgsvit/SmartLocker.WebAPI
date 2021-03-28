@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Localization;
 using SmartLocker.WebAPI.Contracts.DTOs.External.Requests;
 using SmartLocker.WebAPI.Data;
+using SmartLocker.WebAPI.Domain;
 using SmartLocker.WebAPI.Domain.RegisterNotes;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,13 @@ namespace SmartLocker.WebAPI.Services
     public class AccountingService
     {
         private readonly ApplicationContext applicationContext;
+        private readonly ToolService toolService;
         private readonly IStringLocalizer localizer;
 
-        public AccountingService(ApplicationContext applicationContext, IStringLocalizer localizer)
+        public AccountingService(ApplicationContext applicationContext, ToolService toolService, IStringLocalizer localizer)
         {
             this.applicationContext = applicationContext;
+            this.toolService = toolService;
             this.localizer = localizer;
         }
 
@@ -92,6 +95,35 @@ namespace SmartLocker.WebAPI.Services
 
         public async Task<List<ServiceRegisterNote>> GetAvailableServiceTasks() =>
             await applicationContext.ServiceNotes.Where(n => n.Cost == 0 && (n.UserId == Guid.Empty || n.UserId == null)).Include(n => n.Tool).ToListAsync();
+
+        public async Task TakeTool(Guid userId, Guid toolId)
+        {
+            Tool tool = await toolService.GetOneAsync(toolId);
+
+            if (tool.UserId is not null)
+                throw new Exception(localizer["Tool can`t be taken."]);
+
+            tool.UserId = userId;
+            await applicationContext.AccountingNotes.AddAsync(new AccountingRegisterNote(DateTime.Now, userId, toolId, true));
+            applicationContext.Tools.Update(tool);
+
+            await applicationContext.SaveChangesAsync();
+        }
+
+        public async Task ReturnTool(Guid userId, Guid toolId, Guid lockerId)
+        {
+            Tool tool = await toolService.GetOneAsync(toolId);
+
+            if (tool.UserId == null)
+                throw new Exception(localizer["Tool can`t be returned."]);
+
+            tool.UserId = null;
+            tool.LockerId = lockerId;
+            await applicationContext.AccountingNotes.AddAsync(new AccountingRegisterNote(DateTime.Now, userId, toolId, false));
+            applicationContext.Tools.Update(tool);
+
+            await applicationContext.SaveChangesAsync();
+        }
 
         private async Task CheckUserAndNote(Guid userId, Guid noteId)
         {
