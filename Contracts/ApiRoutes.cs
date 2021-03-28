@@ -68,7 +68,10 @@
             public const string ViolationNote = Base + "/violation";
 
             public const string AccountingNote = Base;
-            
+
+            public const string ReturnTool = Base + "/return";
+            public const string TakeTool = Base + "/take";
+
             public const string BookTool = Base + "/queue";
             public const string EnterQueue = Base + "/queue";                      
         }
