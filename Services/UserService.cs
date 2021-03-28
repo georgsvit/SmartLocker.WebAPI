@@ -57,7 +57,7 @@ namespace SmartLocker.WebAPI.Services
             if (!Roles.IsRoleValid(request.Role))
                 throw new Exception(localizer["Role doesn`t exist."]);
 
-            User newUser = new(request.FirstName, request.LastName, request.Role, (AccessLevel)request.AccessLevel, request.Login, request.Password);
+            User newUser = new(request.FirstName, request.LastName, request.Role, (AccessLevel)request.AccessLevel, request.Login, dataProtector.Protect(request.Password));
             User user = await GetOneAsync(id);
 
             if (user is null)
