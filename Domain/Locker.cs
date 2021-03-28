@@ -1,12 +1,24 @@
 ﻿using SmartLocker.WebAPI.Contracts.DTOs.External.Responses;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace SmartLocker.WebAPI.Domain
 {
     public class Locker
     {
         private Locker() { }
+
+        [JsonConstructor]
+        public Locker(Guid id, bool isFull, bool isBlocked, string login, string password, List<Tool> tools)
+        {
+            Id = id;
+            IsFull = isFull;
+            IsBlocked = isBlocked;
+            Login = login;
+            Password = password;
+            Tools = tools;
+        }
 
         public Locker(string login, string password)
         {

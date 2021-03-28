@@ -1,12 +1,29 @@
 ﻿using SmartLocker.WebAPI.Contracts.DTOs.External.Requests;
 using SmartLocker.WebAPI.Domain.Constants;
 using System;
+using System.Text.Json.Serialization;
 
 namespace SmartLocker.WebAPI.Domain
 {
     public class Tool
     {
         private Tool() { }
+
+        [JsonConstructor]
+        public Tool(Guid id, string name, string description, string imgUri, AccessLevel accessLevel, Guid? userId, Guid? lockerId, Guid serviceBookId, Locker locker, User user, ServiceBook serviceBook)
+        {
+            Id = id;
+            Name = name;
+            Description = description;
+            ImgUri = imgUri;
+            AccessLevel = accessLevel;
+            UserId = userId;
+            LockerId = lockerId;
+            ServiceBookId = serviceBookId;
+            Locker = locker;
+            User = user;
+            ServiceBook = serviceBook;
+        }
 
         public Tool(ToolCreateRequest request)
         {
