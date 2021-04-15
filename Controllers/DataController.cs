@@ -57,7 +57,7 @@ namespace SmartLocker.WebAPI.Controllers
             try
             {
                 byte[] fileContent = await dataService.CreateBackupAsync();
-                return File(fileContent, "application/octet-stream");
+                return File(fileContent, "application/bak");
             }
             catch (Exception e)
             {
