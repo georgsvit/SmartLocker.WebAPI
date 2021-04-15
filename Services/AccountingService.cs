@@ -104,6 +104,7 @@ namespace SmartLocker.WebAPI.Services
                 throw new Exception(localizer["Tool can`t be taken."]);
 
             tool.UserId = userId;
+            tool.LockerId = null;
             await applicationContext.AccountingNotes.AddAsync(new AccountingRegisterNote(DateTime.Now, userId, toolId, true));
             applicationContext.Tools.Update(tool);
 
