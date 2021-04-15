@@ -27,7 +27,7 @@ namespace SmartLocker.WebAPI.Services
         }
 
         public async Task<List<LockerDataResponse>> GetAllAsync() =>
-            await applicationContext.Lockers.Select(l => l.GetLockerDataResponse()).ToListAsync();
+            await applicationContext.Lockers.Include(l => l.Tools).Select(l => l.GetLockerDataResponse()).ToListAsync();
 
         public async Task<Locker> GetOneAsync(Guid id)
         {
@@ -60,7 +60,7 @@ namespace SmartLocker.WebAPI.Services
 
         public async Task<Locker> EditAsync(Guid id, LockerEditRequest request)
         {
-            Locker newLocker = new(request.Login, request.Password, request.IsFull, request.IsBlocked);
+            Locker newLocker = new(request.Login, "password", request.IsFull, request.IsBlocked);
             Locker locker = await GetOneAsync(id);
 
             if (request.Password != "")
