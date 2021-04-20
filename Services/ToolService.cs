@@ -47,6 +47,7 @@ namespace SmartLocker.WebAPI.Services
             Tool newTool = new(request);
             Tool tool = await GetOneAsync(id);
 
+            newTool.ServiceState = tool.ServiceState;
             tool = newTool;
             tool.Id = id;
 
