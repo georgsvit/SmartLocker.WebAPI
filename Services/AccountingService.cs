@@ -3,6 +3,7 @@ using Microsoft.Extensions.Localization;
 using SmartLocker.WebAPI.Contracts.DTOs.External.Requests;
 using SmartLocker.WebAPI.Data;
 using SmartLocker.WebAPI.Domain;
+using SmartLocker.WebAPI.Domain.Constants;
 using SmartLocker.WebAPI.Domain.RegisterNotes;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,10 @@ namespace SmartLocker.WebAPI.Services
             if (isNoteInDb is not null)
                 throw new Exception(localizer["Note already exists."]);
 
+            var tool = await applicationContext.Tools.FirstOrDefaultAsync(t => t.Id == request.ToolId);
+            tool.ServiceState = ServiceStates.SERVICE_REQUESTED;
+
+            applicationContext.Tools.Update(tool);
             await applicationContext.ServiceNotes.AddAsync(note);
             await applicationContext.SaveChangesAsync();
         }
@@ -73,6 +78,9 @@ namespace SmartLocker.WebAPI.Services
 
             note.UserId = userId;
 
+            var tool = await applicationContext.Tools.FirstOrDefaultAsync(t => t.Id == note.ToolId);
+            tool.ServiceState = ServiceStates.IN_SERVICE;
+
             applicationContext.ServiceNotes.Update(note);
             await applicationContext.SaveChangesAsync();
         }
@@ -87,6 +95,9 @@ namespace SmartLocker.WebAPI.Services
             note.Cost = request.Cost;
             serviceBook.Usages = 0;
             serviceBook.LastServiceDate = DateTime.Now;
+
+            var tool = await applicationContext.Tools.FirstOrDefaultAsync(t => t.Id == note.ToolId);
+            tool.ServiceState = ServiceStates.SERVED;
 
             applicationContext.ServiceNotes.Update(note);
             applicationContext.ServiceBooks.Update(serviceBook);
@@ -121,6 +132,15 @@ namespace SmartLocker.WebAPI.Services
             tool.UserId = null;
             tool.LockerId = lockerId;
             await applicationContext.AccountingNotes.AddAsync(new AccountingRegisterNote(DateTime.Now, userId, toolId, false));
+
+            tool.ServiceBook.Usages++;
+
+            if (tool.ServiceBook.Usages >= tool.ServiceBook.MaxUsages 
+                || (DateTime.Now - tool.ServiceBook.LastServiceDate).TotalMilliseconds >= tool.ServiceBook.MsBetweenServices)
+            {
+                tool.ServiceState = ServiceStates.SERVICE_REQUIRED;
+            }
+
             applicationContext.Tools.Update(tool);
 
             await applicationContext.SaveChangesAsync();
