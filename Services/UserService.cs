@@ -32,9 +32,26 @@ namespace SmartLocker.WebAPI.Services
                 throw new Exception(localizer["Role doesn`t exist."]);
 
             var users = role is null
-                ? await applicationContext.Users.ToListAsync()
-                : await applicationContext.Users.Where(u => u.Role == role.ToUpper()).ToListAsync();
+                ? await applicationContext.Users.Include(u => u.AccountingNotes)
+                                                    .ThenInclude(a => a.Tool)
+                                                .Include(u => u.ServiceNotes)
+                                                    .ThenInclude(s => s.Tool)
+                                                .Include(u => u.ViolationNotes)
+                                                    .ThenInclude(v => v.Tool)
+                                                .Include(u => u.ViolationNotes)
+                                                    .ThenInclude(v => v.Locker)
+                                                .ToListAsync()
 
+                : await applicationContext.Users.Include(u => u.AccountingNotes)
+                                                    .ThenInclude(a => a.Tool)
+                                                .Include(u => u.ServiceNotes)
+                                                    .ThenInclude(s => s.Tool)
+                                                .Include(u => u.ViolationNotes)
+                                                    .ThenInclude(v => v.Tool)
+                                                .Include(u => u.ViolationNotes)
+                                                    .ThenInclude(v => v.Locker)
+                                                .Where(u => u.Role == role.ToUpper()).ToListAsync();
+           
             users.ForEach(user => UnprotectUserData(user));
 
             return users.Select(u => u.GetUserDataResponse()).ToList();
@@ -57,11 +74,19 @@ namespace SmartLocker.WebAPI.Services
             if (!Roles.IsRoleValid(request.Role))
                 throw new Exception(localizer["Role doesn`t exist."]);
 
-            User newUser = new(request.FirstName, request.LastName, request.Role, (AccessLevel)request.AccessLevel, request.Login, dataProtector.Protect(request.Password));
+            User newUser = new(request.FirstName, request.LastName, request.Role, (AccessLevel)request.AccessLevel, request.Login, request.Password);
+
+            ProtectUserData(newUser);
+
             User user = await GetOneAsync(id);
 
             if (user is null)
                 throw new Exception(localizer["User with this identifier doesn`t exist."]);
+
+            if (request.Password == "")
+            {
+                newUser.Password = user.Password;
+            }
 
             user = newUser;
             user.Id = id;
@@ -70,6 +95,13 @@ namespace SmartLocker.WebAPI.Services
             await applicationContext.SaveChangesAsync();
 
             return await GetOneAsync(id);
+        }
+
+        private void ProtectUserData(User user)
+        {
+            user.Password = dataProtector.Protect(user.Password);
+            user.FirstName = dataProtector.Protect(user.FirstName);
+            user.LastName = dataProtector.Protect(user.LastName);
         }
 
         private void UnprotectUserData(User user)
