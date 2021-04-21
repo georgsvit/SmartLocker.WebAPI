@@ -73,7 +73,10 @@
             public const string TakeTool = Base + "/take";
 
             public const string BookTool = Base + "/queue";
-            public const string EnterQueue = Base + "/queue";                      
+            public const string EnterQueue = Base + "/queue";        
+            
+            public const string Notification = Base + "/notification";                      
+            public const string SetNotificationViewed = Base + "/notification/{Id}";                      
         }
 
         public static class Service
