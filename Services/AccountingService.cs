@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using SmartLocker.WebAPI.Contracts.DTOs.External.Requests;
+using SmartLocker.WebAPI.Contracts.DTOs.External.Responses;
 using SmartLocker.WebAPI.Data;
 using SmartLocker.WebAPI.Domain;
 using SmartLocker.WebAPI.Domain.Constants;
@@ -17,12 +19,14 @@ namespace SmartLocker.WebAPI.Services
         private readonly ApplicationContext applicationContext;
         private readonly ToolService toolService;
         private readonly IStringLocalizer localizer;
+        protected readonly IDataProtector dataProtector;
 
-        public AccountingService(ApplicationContext applicationContext, ToolService toolService, IStringLocalizer localizer)
+        public AccountingService(ApplicationContext applicationContext, ToolService toolService, IStringLocalizer localizer, IDataProtectionProvider provider)
         {
             this.applicationContext = applicationContext;
             this.toolService = toolService;
             this.localizer = localizer;
+            dataProtector = provider.CreateProtector(DataProtectionPurposes.UserService);
         }
 
         public async Task AddViolationNote(ViolationNoteCreateRequest request)
@@ -146,6 +150,46 @@ namespace SmartLocker.WebAPI.Services
             await applicationContext.SaveChangesAsync();
         }
 
+        public async Task<NotificationsResponse> GetNotifications()
+        {
+            var serviceNotes = await applicationContext.ServiceNotes.Where(sn => !sn.IsViewed)
+                                    .Include(n => n.Tool)
+                                    .Include(n => n.User).ToListAsync();
+            var violationNotes = await applicationContext.ViolationNotes.Where(sn => !sn.IsViewed)
+                                    .Include(n => n.Tool)
+                                    .Include(n => n.Locker)
+                                    .Include(n => n.User).ToListAsync();
+
+            serviceNotes.Where(n => n.User is not null).ToList().ForEach(n => n.User.RemoveUselessData());
+            serviceNotes.Where(n => n.User is not null).Select(n => n.User).Distinct().ToList().ForEach(u => UnprotectUserData(u));
+
+            violationNotes.Where(n => n.User is not null).ToList().ForEach(n => n.User.RemoveUselessData());
+            violationNotes.Where(n => n.User is not null).Select(n => n.User).Distinct().ToList().ForEach(u => UnprotectUserData(u));
+
+            return new(serviceNotes, violationNotes);
+        }
+
+        public async Task SetNotificationViewed(Guid id)
+        {
+            var serviceNote = await applicationContext.ServiceNotes.AsNoTracking().FirstOrDefaultAsync(n => n.Id == id);
+
+            if (serviceNote is not null)
+            {
+                serviceNote.IsViewed = true;
+                applicationContext.ServiceNotes.Update(serviceNote);
+            }
+
+            var violationNote = await applicationContext.ViolationNotes.AsNoTracking().FirstOrDefaultAsync(n => n.Id == id);
+
+            if (violationNote is not null)
+            {
+                violationNote.IsViewed = true;
+                applicationContext.ViolationNotes.Update(violationNote);
+            }
+
+            await applicationContext.SaveChangesAsync();
+        }
+
         private async Task CheckUserAndNote(Guid userId, Guid noteId)
         {
             var noteInDb = await applicationContext.ServiceNotes.AsNoTracking().FirstOrDefaultAsync(n => n.Id == noteId);
@@ -156,6 +200,12 @@ namespace SmartLocker.WebAPI.Services
 
             if (userInDb is null)
                 throw new Exception(localizer["User with this identifier doesn`t exist."]);
+        }
+
+        private void UnprotectUserData(User user)
+        {
+            user.FirstName = dataProtector.Unprotect(user.FirstName);
+            user.LastName = dataProtector.Unprotect(user.LastName);
         }
     }
 }
