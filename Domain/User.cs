@@ -47,5 +47,12 @@ namespace SmartLocker.WebAPI.Domain
                 
             return new(Id, FirstName, LastName, Role, AccessLevel, Login, Tools, ServiceNotes, ViolationNotes, AccountingNotes);
         }
+
+        public void RemoveUselessData()
+        {
+            ServiceNotes = null;
+            ViolationNotes = null;
+            AccountingNotes = null;
+        }
     }
 }
