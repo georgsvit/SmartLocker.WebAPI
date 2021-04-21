@@ -72,5 +72,33 @@ namespace SmartLocker.WebAPI.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpGet(ApiRoutes.Accounting.Notification)]
+        public async Task<IActionResult> GetNotifications()
+        {
+            try
+            {
+                var notes = await accountingService.GetNotifications();
+                return Ok(notes);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet(ApiRoutes.Accounting.SetNotificationViewed)]
+        public async Task<IActionResult> SetNotificationViewed([FromRoute] Guid id)
+        {
+            try
+            {
+                await accountingService.SetNotificationViewed(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }
