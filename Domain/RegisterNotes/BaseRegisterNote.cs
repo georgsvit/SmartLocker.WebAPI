@@ -10,11 +10,13 @@ namespace SmartLocker.WebAPI.Domain.RegisterNotes
         {
             Date = date;
             UserId = userId;
+            IsViewed = false;
         }
 
         public Guid Id { get; set; }
         public DateTime Date { get; set; }
         public Guid? UserId { get; set; }
+        public bool IsViewed { get; set; }
 
         //
         public User User { get; set; }
