@@ -6,14 +6,14 @@ namespace SmartLocker.WebAPI.Domain.RegisterNotes
     {
         private AccountingRegisterNote() { }
 
-        public AccountingRegisterNote(DateTime date, Guid userId, Guid toolId, bool isTaken) : base(date, userId)
+        public AccountingRegisterNote(DateTime date, Guid userId, Guid toolId, DateTime? returnDate) : base(date, userId)
         {
             ToolId = toolId;
-            IsTaken = isTaken;
+            ReturnDate = returnDate;          
         }
 
         public Guid ToolId { get; set; }
-        public bool IsTaken { get; set; }
+        public DateTime? ReturnDate { get; set; }
 
         //
         public Tool Tool { get; set; }
