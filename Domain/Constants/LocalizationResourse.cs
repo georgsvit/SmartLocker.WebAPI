@@ -2,11 +2,13 @@
 
 namespace SmartLocker.WebAPI.Domain.Constants
 {
-    public static class ErrorMessages
+    public static class LocalizationResourse
     {
         public static Dictionary<string, string> GetUkrainianLocalization()
         {
             Dictionary<string, string> messages = new();
+
+            // Errors
 
             messages.Add("The user with such login is already registered.", "Користувач з таким логіном вже існує.");
             messages.Add("Login failed.", "Помилка входу.");
@@ -28,12 +30,36 @@ namespace SmartLocker.WebAPI.Domain.Constants
             messages.Add("Tool can`t be returned.", "Інструмент не може бути повернутий.");
             messages.Add("Tool can`t be taken.", "Інструмент не може бути отриманий.");
 
+            // Report strings
+
+            messages.Add("Date", "Дата");
+            messages.Add("Tool was taken", "був переданий до сервісного центру");
+            messages.Add("Tool was maintened", "було обслуговано");
+            messages.Add("Cost", "Вартість");
+
+            messages.Add("Serviceman details", "Відомості про майстра:");
+            messages.Add("Fullname", "Повне ім'я");
+            messages.Add("AccessLevel", "Рівень доступу");
+            messages.Add("ServiceReportTitle", "    Журнал сервісного обслуговування\nДата формування:");
+
+            messages.Add("Tool was taken by", "було взято");
+            messages.Add("From", "із комірки");
+            messages.Add("ViolationReportTitle", "    Журнал порушень\nДата формування:");
+            messages.Add("Violator details", "Відомості про порушника:");
+
+            messages.Add("AccountingReportTitle", "    Журнал обліку\nДата формування:");
+            messages.Add("At", "у");
+            messages.Add("Tool was returned at", "Та було повернуто у");
+            messages.Add("User details", "Відомості про співробітника:");
+
             return messages;
         }
 
         public static Dictionary<string, string> GetEnglishLocalization()
         {
             Dictionary<string, string> messages = new();
+
+            // Errors
 
             messages.Add("The user with such login is already registered.", "The user with such login is already registered.");
             messages.Add("Login failed.", "Login failed.");
@@ -54,6 +80,29 @@ namespace SmartLocker.WebAPI.Domain.Constants
             messages.Add("Note with this identifier doesn`t exist.", "Note with this identifier doesn`t exist.");
             messages.Add("Tool can`t be returned.", "Tool can`t be returned.");
             messages.Add("Tool can`t be taken.", "Tool can`t be taken.");
+
+
+            // Report strings
+
+            messages.Add("Date", "Date");
+            messages.Add("Tool was taken", "was taken to service");
+            messages.Add("Tool was maintened", "was maintened by");
+            messages.Add("Cost", "Cost");
+
+            messages.Add("Serviceman details", "Serviceman details:");
+            messages.Add("Fullname", "Full name");
+            messages.Add("AccessLevel", "Access level");
+            messages.Add("ServiceReportTitle", "    Service Register\nFormation date:");
+
+            messages.Add("Tool was taken by", "was taken by");
+            messages.Add("From", "from");
+            messages.Add("ViolationReportTitle", "    Violation Register\nFormation date:");
+            messages.Add("Violator details", "Violator details:");
+
+            messages.Add("AccountingReportTitle", "    Accounting Register\nFormation date:");
+            messages.Add("At", "at");
+            messages.Add("Tool was returned at", "And was returned at");
+            messages.Add("User details", "User details:");
 
             return messages;
         }

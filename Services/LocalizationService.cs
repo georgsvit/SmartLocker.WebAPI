@@ -13,8 +13,8 @@ namespace SmartLocker.WebAPI.Services
 
         public LocalizationService()
         {
-            Dictionary<string, string> enDictionary = ErrorMessages.GetEnglishLocalization();
-            Dictionary<string, string> uaDictionary = ErrorMessages.GetUkrainianLocalization();
+            Dictionary<string, string> enDictionary = LocalizationResourse.GetEnglishLocalization();
+            Dictionary<string, string> uaDictionary = LocalizationResourse.GetUkrainianLocalization();
 
             CheckInitializationCorrectness(enDictionary, uaDictionary);
 
