@@ -77,6 +77,10 @@
             
             public const string Notification = Base + "/notification";                      
             public const string SetNotificationViewed = Base + "/notification/{Id}";                      
+
+            public const string ServiceRegisterReports = Base + "/reports/service";
+            public const string ViolationRegisterReports = Base + "/reports/violation";
+            public const string AccountingRegisterReports = Base + "/reports/accounting";
         }
 
         public static class Service
