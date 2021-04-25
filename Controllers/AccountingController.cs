@@ -11,10 +11,12 @@ namespace SmartLocker.WebAPI.Controllers
     public class AccountingController : ControllerBase
     {
         private readonly AccountingService accountingService;
+        private readonly ReportService reportService;
 
-        public AccountingController(AccountingService accountingService)
+        public AccountingController(AccountingService accountingService, ReportService reportService)
         {
             this.accountingService = accountingService;
+            this.reportService = reportService;
         }
 
         [HttpPost(ApiRoutes.Accounting.ViolationNote)]
@@ -94,6 +96,54 @@ namespace SmartLocker.WebAPI.Controllers
             {
                 await accountingService.SetNotificationViewed(id);
                 return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet(ApiRoutes.Accounting.ServiceRegisterReports)]
+        public async Task<IActionResult> GetServiceRegisterReport()
+        {
+            try
+            {
+                var notes = await accountingService.ServiceRegisterNotes();
+                var response = reportService.GetServiceRegisterReport(notes);
+
+                return File(response, "text/plain", $"Service Register: {DateTime.Now}.txt");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet(ApiRoutes.Accounting.ViolationRegisterReports)]
+        public async Task<IActionResult> GetViolationRegisterReport()
+        {
+            try
+            {
+                var notes = await accountingService.ViolationRegisterNotes();
+                var response = reportService.GetViolationRegisterReport(notes);
+
+                return File(response, "text/plain", $"Violation Register: {DateTime.Now}.txt");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet(ApiRoutes.Accounting.AccountingRegisterReports)]
+        public async Task<IActionResult> GetAccountingRegisterReport()
+        {
+            try
+            {
+                var notes = await accountingService.AccountingRegisterNotes();
+                var response = reportService.GetAccountingRegisterReport(notes);
+
+                return File(response, "text/plain", $"Accounting Register: {DateTime.Now}.txt");
             }
             catch (Exception e)
             {
