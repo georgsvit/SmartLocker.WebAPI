@@ -120,7 +120,7 @@ namespace SmartLocker.WebAPI.Services
 
             tool.UserId = userId;
             tool.LockerId = null;
-            await applicationContext.AccountingNotes.AddAsync(new AccountingRegisterNote(DateTime.Now, userId, toolId, true));
+            await applicationContext.AccountingNotes.AddAsync(new AccountingRegisterNote(DateTime.Now, userId, toolId, null));
             applicationContext.Tools.Update(tool);
 
             await applicationContext.SaveChangesAsync();
@@ -133,9 +133,13 @@ namespace SmartLocker.WebAPI.Services
             if (tool.UserId == null)
                 throw new Exception(localizer["Tool can`t be returned."]);
 
+            var note = await applicationContext.AccountingNotes.AsNoTracking().FirstOrDefaultAsync(n => n.ToolId == toolId && n.UserId == userId && n.ReturnDate == null);
+
             tool.UserId = null;
             tool.LockerId = lockerId;
-            await applicationContext.AccountingNotes.AddAsync(new AccountingRegisterNote(DateTime.Now, userId, toolId, false));
+            note.ReturnDate = DateTime.Now;
+
+            applicationContext.AccountingNotes.Update(note);
 
             tool.ServiceBook.Usages++;
 
@@ -188,6 +192,44 @@ namespace SmartLocker.WebAPI.Services
             }
 
             await applicationContext.SaveChangesAsync();
+        }
+
+        public async Task<List<ServiceRegisterNote>> ServiceRegisterNotes()
+        {
+            var serviceNotes = await applicationContext.ServiceNotes
+                                    .Include(n => n.Tool)
+                                    .Include(n => n.User).ToListAsync();
+
+            serviceNotes.Where(n => n.User is not null).ToList().ForEach(n => n.User.RemoveUselessData());
+            serviceNotes.Where(n => n.User is not null).Select(n => n.User).Distinct().ToList().ForEach(u => UnprotectUserData(u));
+
+            return serviceNotes;
+        }
+
+        public async Task<List<ViolationRegisterNote>> ViolationRegisterNotes()
+        {
+            var notes = await applicationContext.ViolationNotes
+                                    .Include(n => n.Tool)
+                                    .Include(n => n.User)
+                                    .Include(n => n.Locker).ToListAsync();
+
+            notes.Where(n => n.User is not null).ToList().ForEach(n => n.User.RemoveUselessData());
+            notes.Where(n => n.User is not null).Select(n => n.User).Distinct().ToList().ForEach(u => UnprotectUserData(u));
+
+            return notes;
+        }
+
+        public async Task<List<AccountingRegisterNote>> AccountingRegisterNotes()
+        {
+            var notes = await applicationContext.AccountingNotes
+                                    .Include(n => n.Tool)
+                                    .Include(n => n.User)
+                                    .ToListAsync();
+
+            notes.Where(n => n.User is not null).ToList().ForEach(n => n.User.RemoveUselessData());
+            notes.Where(n => n.User is not null).Select(n => n.User).Distinct().ToList().ForEach(u => UnprotectUserData(u));
+
+            return notes;
         }
 
         private async Task CheckUserAndNote(Guid userId, Guid noteId)
