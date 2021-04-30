@@ -44,7 +44,7 @@ namespace SmartLocker.WebAPI
                 SupportedUICultures = supportedCultures
             });
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
