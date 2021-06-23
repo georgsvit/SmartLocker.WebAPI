@@ -39,6 +39,8 @@
             public const string Delete = Base + "/{Id}";
             public const string Block = Base + "/block/{Id}";
             public const string Unblock = Base + "/unblock/{Id}";
+
+            public const string GetConfig = Base + "/config/{Id}";
         }
 
         public static class ServiceBook
@@ -75,7 +77,8 @@
             public const string BookTool = Base + "/queue";
             public const string EnterQueue = Base + "/queue";        
             
-            public const string Notification = Base + "/notification";                      
+            public const string Notification = Base + "/notification";
+            public const string GetWorkerNotifications = Base + "/notification/worker/{Id}";            
             public const string SetNotificationViewed = Base + "/notification/{Id}";                      
 
             public const string ServiceRegisterReports = Base + "/reports/service";
