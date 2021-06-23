@@ -48,11 +48,11 @@ namespace SmartLocker.WebAPI.Controllers
         }
 
         [HttpPost(ApiRoutes.Accounting.ReturnTool)]
-        public async Task<IActionResult> ReturnTool([FromForm] Guid userId, [FromForm] Guid toolId, [FromForm] Guid lockerId)
+        public async Task<IActionResult> ReturnTool([FromBody] ReturnToolRequest request)
         {
             try
             {
-                await accountingService.ReturnTool(userId, toolId, lockerId);
+                await accountingService.ReturnTool(request.userId, request.toolId, request.lockerId, request.date);
                 return Ok();
             }
             catch (Exception e)
@@ -62,11 +62,11 @@ namespace SmartLocker.WebAPI.Controllers
         }
 
         [HttpPost(ApiRoutes.Accounting.TakeTool)]
-        public async Task<IActionResult> TakeTool([FromForm] Guid userId, [FromForm] Guid toolId)
+        public async Task<IActionResult> TakeTool([FromBody] TakeToolRequest request)
         {
             try
             {
-                await accountingService.TakeTool(userId, toolId);
+                await accountingService.TakeTool(request.userId, request.toolId, request.date);
                 return Ok();
             }
             catch (Exception e)
@@ -81,6 +81,20 @@ namespace SmartLocker.WebAPI.Controllers
             try
             {
                 var notes = await accountingService.GetNotifications();
+                return Ok(notes);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet(ApiRoutes.Accounting.GetWorkerNotifications)]
+        public async Task<IActionResult> GetWorkerNotifications([FromRoute] Guid id)
+        {
+            try
+            {
+                var notes = await accountingService.GetWorkerNotifications(id);
                 return Ok(notes);
             }
             catch (Exception e)
@@ -144,6 +158,34 @@ namespace SmartLocker.WebAPI.Controllers
                 var response = reportService.GetAccountingRegisterReport(notes);
 
                 return File(response, "text/plain", $"Accounting Register: {DateTime.Now}.txt");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost(ApiRoutes.Accounting.EnterQueue)]
+        public ActionResult EnterQueue([FromBody] QueueRegisterRequest request)
+        {
+            try
+            {
+                var result = accountingService.EnterQueue(request.UserId, request.toolId);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpGet(ApiRoutes.Locker.GetConfig)]
+        public ActionResult LockerGetConfig([FromRoute] Guid id)
+        {
+            try
+            {
+                var result = accountingService.GetLockersConfig(id);
+                return Ok(result);
             }
             catch (Exception e)
             {
