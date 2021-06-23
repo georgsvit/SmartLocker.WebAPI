@@ -111,7 +111,7 @@ namespace SmartLocker.WebAPI.Services
         public async Task<List<ServiceRegisterNote>> GetAvailableServiceTasks() =>
             await applicationContext.ServiceNotes.Where(n => n.Cost == 0 && (n.UserId == Guid.Empty || n.UserId == null)).Include(n => n.Tool).ToListAsync();
 
-        public async Task TakeTool(Guid userId, Guid toolId)
+        public async Task TakeTool(Guid userId, Guid toolId, DateTime date)
         {
             Tool tool = await toolService.GetOneAsync(toolId);
 
@@ -120,33 +120,47 @@ namespace SmartLocker.WebAPI.Services
 
             tool.UserId = userId;
             tool.LockerId = null;
-            await applicationContext.AccountingNotes.AddAsync(new AccountingRegisterNote(DateTime.Now, userId, toolId, null));
+            await applicationContext.AccountingNotes.AddAsync(new AccountingRegisterNote(date, userId, toolId, null));
             applicationContext.Tools.Update(tool);
 
             await applicationContext.SaveChangesAsync();
         }
 
-        public async Task ReturnTool(Guid userId, Guid toolId, Guid lockerId)
+        public async Task ReturnTool(Guid userId, Guid toolId, Guid lockerId, DateTime date)
         {
             Tool tool = await toolService.GetOneAsync(toolId);
 
             if (tool.UserId == null)
                 throw new Exception(localizer["Tool can`t be returned."]);
 
-            var note = await applicationContext.AccountingNotes.AsNoTracking().FirstOrDefaultAsync(n => n.ToolId == toolId && n.UserId == userId && n.ReturnDate == null);
+            if (userId != Guid.Parse("f5fd5054-48eb-4025-8472-cc5e83e648ab"))
+            {
+                var note = await applicationContext.AccountingNotes.AsNoTracking().FirstOrDefaultAsync(n => n.ToolId == toolId && n.UserId == userId && n.ReturnDate == null);               
+                note.ReturnDate = date;
+
+                applicationContext.AccountingNotes.Update(note);
+
+                tool.ServiceBook.Usages++;
+            }
 
             tool.UserId = null;
             tool.LockerId = lockerId;
-            note.ReturnDate = DateTime.Now;
-
-            applicationContext.AccountingNotes.Update(note);
-
-            tool.ServiceBook.Usages++;
 
             if (tool.ServiceBook.Usages >= tool.ServiceBook.MaxUsages 
-                || (DateTime.Now - tool.ServiceBook.LastServiceDate).TotalMilliseconds >= tool.ServiceBook.MsBetweenServices)
+                || (DateTime.Now - tool.ServiceBook.LastServiceDate).TotalDays >= tool.ServiceBook.MsBetweenServices / 86400)
             {
                 tool.ServiceState = ServiceStates.SERVICE_REQUIRED;
+            }
+
+            List<QueueRegisterNote> notes = await applicationContext.QueueNotes.AsNoTracking().Where(n => n.ToolId == toolId && !n.UserTurn).OrderBy(n => n.Date).ToListAsync();
+
+            QueueRegisterNote newPosition = notes.FirstOrDefault();
+
+            if (newPosition is not null)
+            {
+                newPosition.UserTurn = true;
+                applicationContext.QueueNotes.Update(newPosition);
+                await applicationContext.SaveChangesAsync();
             }
 
             applicationContext.Tools.Update(tool);
@@ -171,6 +185,14 @@ namespace SmartLocker.WebAPI.Services
             violationNotes.Where(n => n.User is not null).Select(n => n.User).Distinct().ToList().ForEach(u => UnprotectUserData(u));
 
             return new(serviceNotes, violationNotes);
+        }
+
+        public async Task<List<QueueRegisterNote>> GetWorkerNotifications(Guid id)
+        {
+            var notes = await applicationContext.QueueNotes.Where(n => n.UserId == id && n.UserTurn && !n.IsViewed)
+                                    .Include(n => n.Tool).ToListAsync();
+            
+            return notes;
         }
 
         public async Task SetNotificationViewed(Guid id)
@@ -230,6 +252,37 @@ namespace SmartLocker.WebAPI.Services
             notes.Where(n => n.User is not null).Select(n => n.User).Distinct().ToList().ForEach(u => UnprotectUserData(u));
 
             return notes;
+        }
+
+        public bool EnterQueue(Guid userId, Guid toolId)
+        {
+            List<QueueRegisterNote> notes = applicationContext.QueueNotes.Where(n => n.ToolId == toolId).ToList();
+            notes = notes.OrderByDescending(n => n.Date).ToList();
+
+            User user = applicationContext.Users.FirstOrDefault(u => u.Id == userId);
+            Tool tool = applicationContext.Tools.FirstOrDefault(t => t.Id == toolId);
+
+            QueueRegisterNote lastNote = notes.FirstOrDefault();
+
+            if ((lastNote is not null && lastNote.UserId == userId) || (user.AccessLevel < tool.AccessLevel))
+            {
+                return false;
+            }
+
+            QueueRegisterNote note = new(DateTime.Now, userId, toolId);
+
+            if (notes.Count == 0)
+                note.UserTurn = true;
+
+            applicationContext.QueueNotes.Add(note);
+            applicationContext.SaveChanges();
+            return true;
+        }
+
+        public bool GetLockersConfig(Guid id)
+        {
+            var result = applicationContext.Lockers.SingleOrDefault(l => l.Id == id).IsBlocked;
+            return result;
         }
 
         private async Task CheckUserAndNote(Guid userId, Guid noteId)
