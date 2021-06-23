@@ -37,6 +37,8 @@ namespace SmartLocker.WebAPI.Services
         public async Task CreateAsync(ToolCreateRequest request)
         {
             Tool tool = new(request);
+            tool.UserId = Guid.Parse("f5fd5054-48eb-4025-8472-cc5e83e648ab");
+
 
             await applicationContext.Tools.AddAsync(tool);
             await applicationContext.SaveChangesAsync();
