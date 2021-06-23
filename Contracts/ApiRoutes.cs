@@ -39,6 +39,8 @@
             public const string Delete = Base + "/{Id}";
             public const string Block = Base + "/block/{Id}";
             public const string Unblock = Base + "/unblock/{Id}";
+
+            public const string GetConfig = Base + "/config/{Id}";
         }
 
         public static class ServiceBook
@@ -59,6 +61,39 @@
             public const string Edit = Base + "/{Id}";
             public const string Create = Base;
             public const string Delete = Base + "/{Id}";
+        }
+
+        public static class Accounting
+        {
+            public const string Base = "accounting";
+
+            public const string ViolationNote = Base + "/violation";
+
+            public const string AccountingNote = Base;
+
+            public const string ReturnTool = Base + "/return";
+            public const string TakeTool = Base + "/take";
+
+            public const string BookTool = Base + "/queue";
+            public const string EnterQueue = Base + "/queue";        
+            
+            public const string Notification = Base + "/notification";
+            public const string GetWorkerNotifications = Base + "/notification/worker/{Id}";            
+            public const string SetNotificationViewed = Base + "/notification/{Id}";                      
+
+            public const string ServiceRegisterReports = Base + "/reports/service";
+            public const string ViolationRegisterReports = Base + "/reports/violation";
+            public const string AccountingRegisterReports = Base + "/reports/accounting";
+        }
+
+        public static class Service
+        {
+
+            public const string Base = "service";
+
+            public const string GetAvailableServiceTasks = Base + "/tasks";
+            public const string ApplyServiceNote = Base + "/apply";
+            public const string AcceptMaintenance = Base + "/accept";
         }
     }
 }

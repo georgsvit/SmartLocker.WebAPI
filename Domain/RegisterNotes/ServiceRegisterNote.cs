@@ -6,7 +6,7 @@ namespace SmartLocker.WebAPI.Domain.RegisterNotes
     {
         private ServiceRegisterNote() { }
 
-        public ServiceRegisterNote(DateTime date, Guid userId, Guid toolId, double cost) : base(date, userId)
+        public ServiceRegisterNote(DateTime date, Guid? userId, Guid toolId, double cost) : base(date, userId)
         {
             ToolId = toolId;
             Cost = cost;

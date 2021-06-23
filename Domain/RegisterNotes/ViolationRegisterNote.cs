@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace SmartLocker.WebAPI.Domain.RegisterNotes
 {
     public class ViolationRegisterNote : BaseRegisterNote
     {
-        private ViolationRegisterNote() { }
+        [JsonConstructor]
+        public ViolationRegisterNote() { }
 
         public ViolationRegisterNote(DateTime date, Guid userId, Guid lockerId, Guid toolId) : base(date, userId)
         {

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartLocker.WebAPI.Data;
 
 namespace SmartLocker.WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20210415183313_tool_model_add_service_state")]
+    partial class tool_model_add_service_state
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,11 +53,8 @@ namespace SmartLocker.WebAPI.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsViewed")
+                    b.Property<bool>("IsTaken")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ReturnDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<Guid>("ToolId")
                         .HasColumnType("uniqueidentifier");
@@ -81,17 +80,11 @@ namespace SmartLocker.WebAPI.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsViewed")
-                        .HasColumnType("bit");
-
                     b.Property<Guid>("ToolId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("UserId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("UserTurn")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -113,9 +106,6 @@ namespace SmartLocker.WebAPI.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsViewed")
-                        .HasColumnType("bit");
 
                     b.Property<Guid>("ToolId")
                         .HasColumnType("uniqueidentifier");
@@ -140,9 +130,6 @@ namespace SmartLocker.WebAPI.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsViewed")
-                        .HasColumnType("bit");
 
                     b.Property<Guid>("LockerId")
                         .HasColumnType("uniqueidentifier");
@@ -205,7 +192,7 @@ namespace SmartLocker.WebAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImgUrl")
+                    b.Property<string>("ImgUri")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("LockerId")
@@ -270,7 +257,7 @@ namespace SmartLocker.WebAPI.Migrations
                         .IsRequired();
 
                     b.HasOne("SmartLocker.WebAPI.Domain.User", "User")
-                        .WithMany("AccountingNotes")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Tool");
@@ -304,7 +291,7 @@ namespace SmartLocker.WebAPI.Migrations
                         .IsRequired();
 
                     b.HasOne("SmartLocker.WebAPI.Domain.User", "User")
-                        .WithMany("ServiceNotes")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Tool");
@@ -327,7 +314,7 @@ namespace SmartLocker.WebAPI.Migrations
                         .IsRequired();
 
                     b.HasOne("SmartLocker.WebAPI.Domain.User", "User")
-                        .WithMany("ViolationNotes")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Locker");
@@ -375,13 +362,7 @@ namespace SmartLocker.WebAPI.Migrations
 
             modelBuilder.Entity("SmartLocker.WebAPI.Domain.User", b =>
                 {
-                    b.Navigation("AccountingNotes");
-
-                    b.Navigation("ServiceNotes");
-
                     b.Navigation("Tools");
-
-                    b.Navigation("ViolationNotes");
                 });
 #pragma warning restore 612, 618
         }

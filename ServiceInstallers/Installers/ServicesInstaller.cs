@@ -14,10 +14,12 @@ namespace SmartLocker.WebAPI.ServiceInstallers.Installers
             services.AddTransient<LockerService>();
             services.AddTransient<ServiceBookService>();
             services.AddTransient<ToolService>();
+            services.AddTransient<AccountingService>();
 
             services.AddTransient<JwtTokenService>();
             services.AddTransient<DataService>();
             services.AddTransient<IStringLocalizer, LocalizationService>();
+            services.AddTransient<ReportService>();
         }
     }
 }

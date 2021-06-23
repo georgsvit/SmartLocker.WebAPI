@@ -6,14 +6,19 @@ namespace SmartLocker.WebAPI.Domain.RegisterNotes
     {
         protected BaseRegisterNote() { }
 
-        public BaseRegisterNote(DateTime date, Guid userId)
+        public BaseRegisterNote(DateTime date, Guid? userId)
         {
             Date = date;
             UserId = userId;
+            IsViewed = false;
         }
 
         public Guid Id { get; set; }
         public DateTime Date { get; set; }
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
+        public bool IsViewed { get; set; }
+
+        //
+        public User User { get; set; }
     }
 }
